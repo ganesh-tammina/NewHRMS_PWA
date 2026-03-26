@@ -1,24 +1,18 @@
 <ion-app>
-  <ion-split-pane contentId="main-content" [disabled]="isLoginPage">
+  <app-header *ngIf="!isLoginPage"></app-header>
+
+  <ion-split-pane contentId="main-content" [disabled]="isLoginPage" [class.is-authenticated]="!isLoginPage">
     <!-- SIDENAV MENU -->
     <ion-menu contentId="main-content" type="overlay" class="side-menu-container" *ngIf="showMenu">
       <ion-content class="sidenav-content">
-        <div class="menu-header">
-          <img src="assets/TT_white_logo.svg" alt="Company Logo" class="brand-logo" *ngIf="!isAdmin" />
-          <img src="assets/TT_blue_logo.svg" alt="Admin Logo" class="brand-logo-admin" *ngIf="isAdmin" />
-        </div>
-
         <ion-list lines="none" class="side-menu-list">
           <ng-container *ngFor="let p of appPages">
             <ion-menu-toggle auto-hide="false" *ngIf="shouldShowPage(p)">
-              <ion-item 
-                routerDirection="root" 
-                [routerLink]="[p.url]" 
-                routerLinkActive="selected"
-                class="menu-nav-item">
+              <ion-item routerDirection="root" [routerLink]="[p.url]" routerLinkActive="selected" class="menu-nav-item">
                 <div class="row-left">
                   <ion-icon aria-hidden="true" slot="start" [name]="p.icon" class="inactive-menu"></ion-icon>
-                  <ion-icon aria-hidden="true" slot="start" [name]="p.icon.replace('-outline', '')" class="active-menu"></ion-icon>
+                  <ion-icon aria-hidden="true" slot="start" [name]="p.icon.replace('-outline', '')"
+                    class="active-menu"></ion-icon>
                   <ion-label>{{ p.title }}</ion-label>
                 </div>
               </ion-item>

@@ -1,11 +1,3 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-grid class="ion-margin main-block">
     <ion-row>
@@ -140,7 +132,8 @@
           </div>
           <div class="holidays-coming-soon">
             <div class="coming-soon-content">
-              <img src="https://media.tenor.com/_7n1_44wGisAAAAC/coming-soon-loading.gif" alt="Coming Soon GIF" class="coming-soon-gif">
+              <img src="https://media.tenor.com/_7n1_44wGisAAAAC/coming-soon-loading.gif" alt="Coming Soon GIF"
+                class="coming-soon-gif">
               <h2 class="card-main-header">Upcoming Holidays</h2>
               <p class="coming-soon-text">We're updating the festive list for you!</p>
               <div class="glow-tag">COMING SOON</div>
@@ -210,8 +203,7 @@
               <div class="item-main">
                 <div class="avatar-block">
                   <img [src]="milestone.fullImageUrl" [alt]="milestone.FirstName">
-                  <div class="event-icon-badge"
-                    [class.birthday-badge]="milestone.eventType === 'Birthday'"
+                  <div class="event-icon-badge" [class.birthday-badge]="milestone.eventType === 'Birthday'"
                     [class.anniversary-badge]="milestone.eventType === 'Anniversary'">
                     <ion-icon [name]="milestone.eventType === 'Birthday' ? 'gift' : 'medal'"></ion-icon>
                   </div>

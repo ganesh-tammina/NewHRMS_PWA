@@ -125,12 +125,23 @@
             </ion-card-header>
             <ion-card-content>
               <ion-row class="actions-card">
-                <ion-col size="6">
+                <ion-col size="5">
                   <app-clock-button (statusChanged)="onClockStatusChanged($event)"></app-clock-button>
+                </ion-col>
+                <ion-col size="7">
+                  <ion-button (click)="openRemoteClockinModal()" fill="clear" class="clear" [disabled]="clockButton?.isClockedIn" style="display: block; width: 100%;">
+                    <ion-icon name="wifi-outline" slot="start" style="margin-right:8px; color: #3498db;"></ion-icon>
+                    Remote Clock-In
+                  </ion-button>
 
-                  <ion-button (click)="wfhClockIn()" fill="clear" class="clear" [disabled]="clockButton?.isClockedIn">
-                    <ion-icon name="home-outline" slot="start" style="margin-right:6px;"></ion-icon>
+                  <ion-button (click)="wfhClockIn()" fill="clear" class="clear" [disabled]="clockButton?.isClockedIn" style="display: block; width: 100%;">
+                    <ion-icon name="home-outline" slot="start" style="margin-right:8px; color: #2ecc71;"></ion-icon>
                     WFH Clock-In
+                  </ion-button>
+
+                  <ion-button (click)="openWFHModal()" fill="clear" class="clear" style="display: block; width: 100%;">
+                    <ion-icon name="business-outline" slot="start" style="margin-right:8px; color: #f39c12;"></ion-icon>
+                    Request WFH
                   </ion-button>
                 </ion-col>
               </ion-row>

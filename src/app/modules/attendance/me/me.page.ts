@@ -13,6 +13,8 @@ import { ClockButtonComponent } from '../../../shared/components/clock-button/cl
 import { AttendanceLogComponent } from '../../../shared/components/attendance-log/attendance-log.component';
 import { CalendarComponent } from '../../../shared/components/calendar/calendar.component';
 import { AttendanceRequestComponent } from '../../../shared/components/attendance-request/attendance-request.component';
+import { RemoteClockinModalComponent } from './components/remote-clockin-modal.component';
+import { WorkFromHomeComponent } from './components/work-from-home.component';
 
 @Component({
   selector: 'app-me',
@@ -26,6 +28,8 @@ import { AttendanceRequestComponent } from '../../../shared/components/attendanc
     AttendanceLogComponent,
     CalendarComponent,
     AttendanceRequestComponent,
+    RemoteClockinModalComponent,
+    WorkFromHomeComponent
   ],
 })
 export class MePage implements OnInit {
@@ -253,6 +257,41 @@ export class MePage implements OnInit {
       },
       error: () => this.showToast('WFH check failed', 'danger'),
     });
+  }
+
+  // ================= MODALS =================
+
+  async openRemoteClockinModal() {
+    const modal = await this.modalCtrl.create({
+      component: RemoteClockinModalComponent,
+      cssClass: 'side-custom-popup team-popup',
+      backdropDismiss: false,
+    });
+    
+    modal.onDidDismiss().then((res) => {
+      if (res.data?.success) {
+        this.loadTodayAttendance();
+        this.attendanceRefresh = Date.now();
+      }
+    });
+
+    return await modal.present();
+  }
+
+  async openWFHModal() {
+    const modal = await this.modalCtrl.create({
+      component: WorkFromHomeComponent,
+      cssClass: 'side-custom-popup team-popup',
+      backdropDismiss: false,
+    });
+
+    modal.onDidDismiss().then((data) => {
+      if (data.role === 'success') {
+        this.attendanceRefresh = Date.now();
+      }
+    });
+
+    return await modal.present();
   }
 
   // ================= HELPERS =================

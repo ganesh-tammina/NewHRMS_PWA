@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
     { title: 'Home', url: '/Home', icon: 'home-outline', roles: ['employee', 'manager', 'hr', 'admin'] },
     { title: 'Leave', url: '/leaves', icon: 'calendar-outline', roles: ['employee', 'manager', 'hr', 'admin'] },
     { title: 'My Team', url: '/MyTeam', icon: 'people-outline', roles: ['employee', 'manager', 'hr', 'admin'] },
-    { title: 'Admin', url: '/admin', icon: 'shield-checkmark-outline', roles: ['admin', 'hr'] },
+    { title: 'Admin', url: '/administration', icon: 'shield-checkmark-outline', roles: ['admin', 'hr'] },
     { title: 'Work Track', url: '/workTrack', icon: 'time-outline', roles: ['employee', 'manager', 'hr', 'admin'] },
     { title: 'My Finances', url: '/MyPay', icon: 'cash-outline', roles: ['employee', 'manager', 'hr', 'admin'] }
   ];

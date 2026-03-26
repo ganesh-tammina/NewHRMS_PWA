@@ -23,6 +23,14 @@ const routes: Routes = [
     loadChildren: () => import('./leaves-admin/leaves-admin.module').then(m => m.LeavesAdminPageModule)
   },
   {
+    path: 'leave-types',
+    loadChildren: () => import('./leave-types/leave-types.module').then(m => m.LeaveTypesPageModule)
+  },
+  {
+    path: 'leave-plans',
+    loadChildren: () => import('./leave-plans/leave-plans.module').then(m => m.LeavePlansPageModule)
+  },
+  {
     path: 'projects',
     loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsPageModule)
   }

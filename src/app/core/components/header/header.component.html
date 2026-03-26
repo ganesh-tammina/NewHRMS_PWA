@@ -1,0 +1,75 @@
+<ion-header class="custom-app-header">
+  <ion-toolbar class="header-toolbar">
+
+    <!-- Left side: Menu Button (if inside split-pane context) & Logo -->
+    <div slot="start" class="header-left">
+      <ion-menu-button *ngIf="isAuthenticated" color="light"></ion-menu-button>
+      <img width="165px" height="70px" src="https://techtammina.com/wp-content/uploads/2025/05/techlogo.png"
+        alt="Tech Tammina" class="brand-logo" *ngIf="!isAdmin" />
+      <img src="assets/TT_blue_logo.svg" alt="Admin Logo" class="brand-logo" *ngIf="isAdmin" />
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="search-container" *ngIf="isAuthenticated">
+      <ion-searchbar placeholder="Search employee by name" [(ngModel)]="searchQuery" (ionInput)="onSearch()"
+        showCancelButton="never" class="custom-searchbar">
+      </ion-searchbar>
+
+      <!-- Search Results Popover -->
+      <ion-popover [isOpen]="searchResults.length > 0" [keyboardClose]="false" [backdropDismiss]="true"
+        (didDismiss)="searchResults = []" class="search-popover">
+        <ng-template>
+          <ion-content>
+            <ion-list>
+              <ion-item *ngFor="let result of results" button>
+                <ion-label>{{ result }}</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+
+    <!-- Right side: Notifications & Profile -->
+    <div slot="end" class="header-right">
+      <div *ngIf="isAuthenticated" class="user-greeting">
+        <span class="user-name" *ngIf="isAdmin">Tammina Admin</span>
+        <span class="user-name" *ngIf="!isAdmin">{{ currentEmployee?.FirstName }}</span>
+      </div>
+
+      <ion-buttons *ngIf="isAuthenticated">
+        <ion-button color="light" class="nav-icon-btn">
+          <ion-icon name="notifications-outline" class="nav-icon"></ion-icon>
+        </ion-button>
+
+        <ion-button id="profile-popover-trigger" class="profile-btn" fill="clear">
+          <img [src]="profileImageUrl" alt="Profile" class="profile-pic" />
+        </ion-button>
+      </ion-buttons>
+
+      <!-- Profile Popover -->
+      <ion-popover trigger="profile-popover-trigger" [dismissOnSelect]="true" class="profile-dropdown" side="bottom"
+        alignment="end">
+        <ng-template>
+          <ion-content>
+            <ion-list lines="none">
+              <ion-item button (click)="viewProfile()">
+                <ion-icon name="person-outline" slot="start"></ion-icon>
+                <ion-label>View Profile</ion-label>
+              </ion-item>
+              <ion-item button>
+                <ion-icon name="key-outline" slot="start"></ion-icon>
+                <ion-label>Change Password</ion-label>
+              </ion-item>
+              <ion-item button (click)="logout()" color="danger">
+                <ion-icon name="log-out-outline" slot="start"></ion-icon>
+                <ion-label>Logout</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
+
+  </ion-toolbar>
+</ion-header>

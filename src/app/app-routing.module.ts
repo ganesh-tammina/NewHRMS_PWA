@@ -49,7 +49,7 @@ const routes: Routes = [
     data: { role: ['employee', 'manager', 'hr', 'admin'] }
   },
   {
-    path: 'profile-page',
+    path: 'profile',
     loadChildren: () => import('./modules/employee/profile/profile.module').then(m => m.ProfilePageModule),
     canActivate: [AuthGuard]
   },

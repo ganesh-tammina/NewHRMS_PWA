@@ -1,53 +1,9 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar class="gradient-header">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>My Team</ion-title>
-    <ion-buttons slot="end" class="header-buttons">
-      <!-- Manager Approvals Dropdowns / Buttons -->
-      <ion-button class="primary-outline-btn ion-hide-sm-down" (click)="openLeaveApprovals()">
-        <ion-icon name="calendar-outline"></ion-icon> Leave Approvals
-      </ion-button>
-      <ion-button class="primary-outline-btn ion-hide-sm-down" (click)="openTimesheetApprovals()">
-        <ion-icon name="time-outline"></ion-icon> Timesheet Approvals
-      </ion-button>
-      <ion-button class="primary-outline-btn ion-hide-sm-down" (click)="openWFHApprovals()">
-        <ion-icon name="home-outline"></ion-icon> WFH Approvals
-      </ion-button>
-
-      <ion-item class="team-reports-btn primary-outline-btn" lines="none" color="transparent">
-        <ion-icon name="document-text-outline" color="dark"></ion-icon>
-        <ion-select interface="popover" placeholder="Reports" (ionChange)="onReportChange($event)">
-          <ion-select-option value="team_report">Team Reports</ion-select-option>
-        </ion-select>
-      </ion-item>
-    </ion-buttons>
-  </ion-toolbar>
-
-  <!-- Mobile Only Approval Buttons -->
-  <ion-toolbar class="ion-hide-md-up gradient-header" style="--min-height: auto;">
-    <div class="header-buttons" style="display: flex; justify-content: center; gap: 4px; padding: 4px;">
-      <ion-button class="primary-outline-btn" (click)="openLeaveApprovals()" size="small">
-        <ion-icon name="calendar-outline"></ion-icon> Leaves
-      </ion-button>
-      <ion-button class="primary-outline-btn" (click)="openTimesheetApprovals()" size="small">
-        <ion-icon name="time-outline"></ion-icon> Timesheets
-      </ion-button>
-      <ion-button class="primary-outline-btn" (click)="openWFHApprovals()" size="small">
-        <ion-icon name="home-outline"></ion-icon> WFH
-      </ion-button>
-    </div>
-  </ion-toolbar>
-
-  <!-- Top Filters & View Toggle -->
-  <ion-toolbar>
-    <div class="toolbar-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 10px;">
-      <ion-searchbar (ionInput)="filterTeam($event)" placeholder="Search team member..." animated="true" style="flex: 1; padding: 0;"></ion-searchbar>
-      <ion-button fill="clear" (click)="toggleAttendanceView()" [color]="attendanceViewActive ? 'primary' : 'medium'">
-        <ion-icon [name]="attendanceViewActive ? 'people' : 'grid'" slot="icon-only"></ion-icon>
-      </ion-button>
-    </div>
+    <ion-title>Attendance Reports</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -57,96 +13,150 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Loading State -->
-  <div class="loading-container" *ngIf="isLoading">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Loading team details...</p>
-  </div>
-
-  <!-- Standard Card View -->
-  <ng-container *ngIf="!isLoading && !attendanceViewActive">
-    <div class="team-grid" *ngIf="filteredTeam.length > 0">
-      <ion-card *ngFor="let member of filteredTeam" class="team-card">
-        <ion-card-content>
-          <div class="card-header-content row-space-between" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
-            <div class="row-left">
-              <div class="avatar-section">
-                <ion-avatar>
-                  <img [src]="getProfileImage(member)" onerror="this.src='assets/icon/Default-user.svg'" />
-                </ion-avatar>
-                <!-- Real-time Attendance Badge -->
-                <ion-badge class="status-badge" [ngClass]="getRealTimeStatus(member.id).status === 'in' ? 'badge-in' : 'badge-out'">
-                </ion-badge>
-              </div>
-              <div class="employee-info ml-15">
-                <div class="member-name">{{ member.FirstName }} {{ member.LastName }}</div>
-                <div class="member-role">{{ member.DesignationCode || 'Employee' }}</div>
-              </div>
-            </div>
+  <div class="reports-container">
+    <!-- ═══════════ ATTENDANCE REPORTS HEADER ═══════════ -->
+    <div class="reports-header-card">
+      <div class="header-main">
+        <h2>Attendance Reports</h2>
+        <div class="date-selector">
+          <span class="label">Select Date</span>
+          <div class="date-picker-wrapper">
+             <ion-datetime-button datetime="datetime"></ion-datetime-button>
+             <ion-modal>
+               <ng-template>
+                 <ion-datetime id="datetime" presentation="date" [(ngModel)]="selectedDate" (ionChange)="onDateChange($event)"></ion-datetime>
+               </ng-template>
+             </ion-modal>
           </div>
-
-          <!-- Contact Details -->
-          <div class="contact-details">
-            <div class="detail-text">
-              <label><ion-icon name="mail-outline"></ion-icon></label>
-              <p>{{ member.WorkEmail }}</p>
-            </div>
-            <div class="detail-text" *ngIf="member.Phone">
-              <label><ion-icon name="call-outline"></ion-icon></label>
-              <p>{{ member.Phone }}</p>
-            </div>
-          </div>
-
-          <!-- Quick Status Info -->
-          <div class="attendance-details">
-            <div class="attendance-info row-right">
-              <ion-chip [ngClass]="getRealTimeStatus(member.id).status === 'in' ? 'present' : 'absent'">
-                {{ getRealTimeStatus(member.id).status === 'in' ? 'Present' : 'Absent' }}
-              </ion-chip>
-            </div>
-          </div>
-
-        </ion-card-content>
-      </ion-card>
+        </div>
+      </div>
     </div>
 
-    <!-- Empty State -->
-    <div class="empty-state" *ngIf="filteredTeam.length === 0 && !isLoading">
-      <ion-icon name="people-circle-outline" class="empty-icon"></ion-icon>
-      <h3>No Team Members Found</h3>
-      <p>Try adjusting your search criteria</p>
-    </div>
-  </ng-container>
+    <!-- ═══════════ PREMIUM SUMMARY CARDS ═══════════ -->
+    <div class="summary-scroll-wrapper">
+      <div class="premium-summary-grid">
+        <!-- Total Team -->
+        <div class="premium-card total" (click)="setFilter('all')" [class.active]="currentFilter === 'all'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="people"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Total Team</span>
+              <span class="value">{{ counts.total || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="people-circle-outline"></ion-icon></div>
+        </div>
 
-  <!-- Detailed Attendance View -->
-  <ng-container *ngIf="!isLoading && attendanceViewActive">
-    <div class="attendance-container ion-padding">
-      <div class="date-card">
-        <h2>Team Attendance</h2>
-        <ion-item lines="none" class="date-picker-item">
-          <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon>
-          <ion-input type="date" [value]="selectedDate" (ionChange)="onDateChange($event)"></ion-input>
-        </ion-item>
+        <!-- Present -->
+        <div class="premium-card present" (click)="setFilter('present')" [class.active]="currentFilter === 'present'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="person-add"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Present</span>
+              <span class="value">{{ counts.present || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="checkmark-done-circle-outline"></ion-icon></div>
+        </div>
+
+        <!-- Absent -->
+        <div class="premium-card absent" (click)="setFilter('absent')" [class.active]="currentFilter === 'absent'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="calendar-clear"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Absent</span>
+              <span class="value">{{ counts.absent || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="calendar-outline"></ion-icon></div>
+        </div>
+
+        <!-- On Leave -->
+        <div class="premium-card leave" (click)="setFilter('on_leave')" [class.active]="currentFilter === 'on_leave'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="airplane"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">On Leave</span>
+              <span class="value">{{ counts.onLeave || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="airplane-outline"></ion-icon></div>
+        </div>
+
+        <!-- Not Punched (Not Checked-In) -->
+        <div class="premium-card not-punched" (click)="setFilter('not_punched')" [class.active]="currentFilter === 'not_punched'">
+           <div class="card-content">
+             <div class="card-icon"><ion-icon name="hand-right"></ion-icon></div>
+             <div class="card-info">
+               <span class="label">Not Punched</span>
+               <span class="value">{{ counts.notPunched || 0 }}</span>
+             </div>
+           </div>
+           <div class="card-illustration"><ion-icon name="hand-right-outline"></ion-icon></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TEAM LIST GRID ═══════════ -->
+    <div class="team-section">
+      <div class="section-actions">
+        <ion-searchbar (ionInput)="filterTeam($event)" [(ngModel)]="searchTerm" placeholder="Search employee..." animated="true" class="custom-searchbar"></ion-searchbar>
       </div>
 
-      <ion-list class="attendance-list">
-        <ion-item *ngFor="let member of attendanceData" class="attendance-item">
-          <ion-avatar slot="start">
-            <img [src]="getProfileImage(member)" onerror="this.src='assets/icon/Default-user.svg'" />
-          </ion-avatar>
-          <ion-label>
-            <h2>{{ member.FirstName }} {{ member.LastName }}</h2>
-            <p>{{ member.DesignationCode }}</p>
-            <div class="sub-text" *ngIf="member.attendance?.status === 'in'">
-              <ion-icon name="time-outline" color="medium"></ion-icon>
-              {{ member.attendance.first_in || '--:--' }} - {{ member.attendance.last_out || '--:--' }}
+      <div class="premium-team-grid" *ngIf="!isLoading; else loadingState">
+        <div class="employee-card-wrapper" *ngFor="let member of filteredTeam">
+          <div class="premium-emp-card">
+            <div class="card-accent" [style.background]="getAvatarColor(member.id)"></div>
+            
+            <div class="card-body">
+              <div class="body-top">
+                <div class="profile-block">
+                  <ion-avatar class="emp-avatar">
+                    <img [src]="getProfileImage(member)" onerror="this.src='assets/icon/Default-user.svg'" />
+                  </ion-avatar>
+                  <div class="emp-identity">
+                    <h3 class="emp-name">{{ member.FirstName }} {{ member.LastName }}</h3>
+                    <p class="emp-title">{{ member.DesignationCode || 'Employee' }}</p>
+                    <p class="emp-dept" *ngIf="member.ProcessName">{{ member.ProcessName }}</p>
+                  </div>
+                </div>
+                
+                <!-- Status Badge -->
+                <div class="status-badge-container">
+                  <div class="status-badge" [ngClass]="getDisplayStatusClass(member.id)">
+                    <span class="dot"></span>
+                    <span class="text">{{ getDisplayStatusText(member.id) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="body-bottom">
+                <div class="info-row">
+                  <span class="label">Location:</span>
+                  <span class="value">{{ member.Location || 'Site 1 - TSN' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Mail:</span>
+                  <span class="value mail">{{ member.WorkEmail }}</span>
+                </div>
+              </div>
             </div>
-          </ion-label>
-          <ion-badge slot="end" [color]="member.attendance?.status === 'in' ? 'success' : 'danger'" class="status-badge">
-            {{ member.attendance?.status || 'absent' | uppercase }}
-          </ion-badge>
-        </ion-item>
-      </ion-list>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredTeam.length === 0 && !isLoading">
+        <ion-icon name="search-outline"></ion-icon>
+        <h3>No matches found</h3>
+        <p>Try refining your search keyword</p>
+      </div>
     </div>
-  </ng-container>
+  </div>
+
+  <ng-template #loadingState>
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Updating attendance list...</p>
+    </div>
+  </ng-template>
 </ion-content>

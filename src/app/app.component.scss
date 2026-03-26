@@ -13,7 +13,7 @@ ion-menu ion-content.sidenav-content {
     width: 60px;
     height: auto;
   }
-  
+
   .brand-logo-admin {
     width: 60px;
     height: auto;
@@ -32,6 +32,7 @@ ion-menu ion-content.sidenav-content {
   display: flex;
   flex-direction: column;
   height: calc(100% - 100px);
+  margin-top: 30px;
 }
 
 .menu-nav-item {
@@ -43,13 +44,13 @@ ion-menu ion-content.sidenav-content {
   --inner-padding-end: 0;
   min-height: 80px;
   cursor: pointer;
-  
+
   &.selected {
     --background: rgba(255, 255, 255, 0.15);
     --color: #fff;
     border-radius: 10px;
     position: relative;
-    
+
     &::before {
       content: '';
       position: absolute;
@@ -86,7 +87,7 @@ ion-menu ion-content.sidenav-content {
   .active-menu {
     display: none;
   }
-  
+
   .inactive-menu {
     display: block;
   }
@@ -95,6 +96,7 @@ ion-menu ion-content.sidenav-content {
     .active-menu {
       display: block;
     }
+
     .inactive-menu {
       display: none;
     }
@@ -104,7 +106,7 @@ ion-menu ion-content.sidenav-content {
 .logout-item {
   margin-top: auto;
   --color: #ef4444;
-  
+
   &:hover {
     --background: rgba(239, 68, 68, 0.1);
   }
@@ -117,22 +119,27 @@ ion-router-outlet {
   width: 100%;
 }
 
+ion-split-pane.is-authenticated {
+  margin-top: 64px;
+  height: calc(100vh - 64px);
+}
+
 @media (max-width: 767px) {
   .side-menu-container {
     max-width: 250px !important;
     --side-width: 250px !important;
   }
-  
+
   .menu-nav-item {
     min-height: 60px;
     padding: 0 10px;
-    
+
     .row-left {
       flex-direction: row;
       justify-content: flex-start;
       gap: 15px;
       padding-left: 20px;
-      
+
       ion-label {
         font-size: 14px;
         text-align: left;

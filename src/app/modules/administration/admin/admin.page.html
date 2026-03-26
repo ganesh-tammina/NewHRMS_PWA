@@ -1,12 +1,3 @@
-<ion-header>
-  <ion-toolbar color="primary" class="gradient-header">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Admin Dashboard</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true" class="admin-dashboard ion-padding">
   <div class="top-bar">
     <h1>Manage and maintain organizational master data</h1>
@@ -19,7 +10,8 @@
         <ion-card (click)="emp()" class="clickable-card">
           <ion-card-header>
             <div class="card-icon-wrapper">
-              <img src="assets/icon/emploees_manage.svg" width="48" class="blue-img" onerror="this.src='assets/icon/Default-user.svg'">
+              <img src="assets/icon/emploees_manage.svg" width="48" class="blue-img"
+                onerror="this.src='assets/icon/Default-user.svg'">
             </div>
             <ion-card-title>Employees List</ion-card-title>
             <p>Monitor and maintain employee records</p>

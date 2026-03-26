@@ -1,122 +1,6 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Leave Management</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content fullscreen class="leaves-block">
 
-  <!-- ═══════════ MY TEAM ACTION BAR (Manager/HR Only) ═══════════ -->
-  <div class="team-action-bar" *ngIf="isManager">
-    <div class="team-action-header">
-      <div class="header-left">
-        <ion-icon name="people-circle-outline" class="team-icon"></ion-icon>
-        <div>
-          <h3 class="team-title">My Team</h3>
-          <p class="team-subtitle">Manage approvals and team details</p>
-        </div>
-      </div>
-    </div>
 
-    <div class="action-buttons-grid">
-      <!-- Timesheet Approvals -->
-      <div class="action-card timesheet-card" (click)="navigateToTimesheetApprovals()" id="timeApp">
-        <div class="action-card-icon">
-          <ion-icon name="time-outline"></ion-icon>
-        </div>
-        <div class="action-card-content">
-          <h4>Timesheet</h4>
-          <p>Approvals</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-      </div>
-
-      <!-- Leaves Approvals -->
-      <div class="action-card leaves-card" (click)="navigateToLeaveApprovals()" id="leaveApp">
-        <div class="action-card-icon">
-          <ion-icon name="airplane-outline"></ion-icon>
-        </div>
-        <div class="action-card-content">
-          <h4>Leaves</h4>
-          <p>Approvals</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-      </div>
-
-      <!-- Attendance Approvals -->
-      <div class="action-card attendance-card" (click)="navigateToAttendanceApprovals()" id="AttApp">
-        <div class="action-card-icon">
-          <ion-icon name="finger-print-outline"></ion-icon>
-        </div>
-        <div class="action-card-content">
-          <h4>Attendance</h4>
-          <p>Approvals</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-      </div>
-
-      <!-- My Team Details -->
-      <div class="action-card team-details-card" (click)="navigateToMyTeam()" id="teamDetails">
-        <div class="action-card-icon">
-          <ion-icon name="people-outline"></ion-icon>
-        </div>
-        <div class="action-card-content">
-          <h4>My Team</h4>
-          <p>Details</p>
-        </div>
-        <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════ TEAM ATTENDANCE SUMMARY (Manager/HR Only) ═══════════ -->
-  <div class="attendance-summary-container" *ngIf="isManager && teamAttendanceSummary">
-    <div class="summary-cards-grid">
-      <!-- Total -->
-      <div class="summary-card total">
-        <div class="card-icon"><ion-icon name="people-outline"></ion-icon></div>
-        <div class="card-info">
-          <span class="value">{{ teamAttendanceSummary.total_team_members || 0 }}</span>
-          <span class="label">Total Team</span>
-        </div>
-      </div>
-      <!-- Present -->
-      <div class="summary-card present">
-        <div class="card-icon"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
-        <div class="card-info">
-          <span class="value">{{ teamAttendanceSummary.present_count || 0 }}</span>
-          <span class="label">Present</span>
-        </div>
-      </div>
-      <!-- Absent/On Leave -->
-      <div class="summary-card leave">
-        <div class="card-icon"><ion-icon name="airplane-outline"></ion-icon></div>
-        <div class="card-info">
-          <span class="value">{{ teamAttendanceSummary.on_leave_count || 0 }}</span>
-          <span class="label">On Leave</span>
-        </div>
-      </div>
-       <!-- Late In -->
-       <div class="summary-card late">
-        <div class="card-icon"><ion-icon name="alert-circle-outline"></ion-icon></div>
-        <div class="card-info">
-          <span class="value">{{ teamAttendanceSummary.late_counts || 0 }}</span>
-          <span class="label">Late In</span>
-        </div>
-      </div>
-      <!-- Not Punch-in -->
-      <div class="summary-card not-punched">
-        <div class="card-icon"><ion-icon name="hand-right-outline"></ion-icon></div>
-        <div class="card-info">
-          <span class="value">{{ teamAttendanceSummary.not_responded_count || 0 }}</span>
-          <span class="label">Not Punched</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Request Leave Button -->
   <div class="request-btn">
@@ -207,20 +91,29 @@
         <ion-col size="2">
           <p>{{ leave.from_date | date:'MMM d' }} - {{ leave.to_date | date:'MMM d' }}</p>
         </ion-col>
-        <ion-col size="2"><p>{{ leave.leave_type }}</p></ion-col>
-        <ion-col size="1"><p>{{ leave.days }}</p></ion-col>
-        <ion-col size="2"><p>{{ leave.applied_on | date:'dd MMM y' }}</p></ion-col>
+        <ion-col size="2">
+          <p>{{ leave.leave_type }}</p>
+        </ion-col>
+        <ion-col size="1">
+          <p>{{ leave.days }}</p>
+        </ion-col>
+        <ion-col size="2">
+          <p>{{ leave.applied_on | date:'dd MMM y' }}</p>
+        </ion-col>
         <ion-col size="2">
           <ion-badge class="pending">{{ leave.status }}</ion-badge>
         </ion-col>
-        <ion-col size="3" class="text-wrap"><p>{{ leave.reason }}</p></ion-col>
+        <ion-col size="3" class="text-wrap">
+          <p>{{ leave.reason }}</p>
+        </ion-col>
       </ion-row>
     </ion-grid>
 
     <ng-template #noPendingLeaves>
       <ion-row class="no-leaves">
         <ion-col size="12" class="ion-text-center">
-          <ion-icon name="document-text-outline" style="font-size:48px;color:#ccc;display:block;margin:0 auto 8px;"></ion-icon>
+          <ion-icon name="document-text-outline"
+            style="font-size:48px;color:#ccc;display:block;margin:0 auto 8px;"></ion-icon>
           <p class="no-data-text">No pending leave requests</p>
         </ion-col>
       </ion-row>
@@ -253,12 +146,21 @@
                   <ion-col size="3">
                     <p>{{ leave.from_date | date:'MMM d' }} - {{ leave.to_date | date:'MMM d' }}</p>
                   </ion-col>
-                  <ion-col size="2"><p>{{ leave.leave_type }}</p></ion-col>
-                  <ion-col size="1"><p>{{ leave.days }}</p></ion-col>
-                  <ion-col size="2" class="text-wrap"><p>{{ leave.reason }}</p></ion-col>
-                  <ion-col size="2"><p>{{ leave.applied_on | date:'dd MMM y' }}</p></ion-col>
                   <ion-col size="2">
-                    <ion-badge [ngClass]="{ 'accept': leave.status === 'APPROVED', 'reject': leave.status === 'REJECTED' }">
+                    <p>{{ leave.leave_type }}</p>
+                  </ion-col>
+                  <ion-col size="1">
+                    <p>{{ leave.days }}</p>
+                  </ion-col>
+                  <ion-col size="2" class="text-wrap">
+                    <p>{{ leave.reason }}</p>
+                  </ion-col>
+                  <ion-col size="2">
+                    <p>{{ leave.applied_on | date:'dd MMM y' }}</p>
+                  </ion-col>
+                  <ion-col size="2">
+                    <ion-badge
+                      [ngClass]="{ 'accept': leave.status === 'APPROVED', 'reject': leave.status === 'REJECTED' }">
                       {{ leave.status }}
                     </ion-badge>
                   </ion-col>
@@ -271,7 +173,8 @@
         <ng-template #noApprovedRejectedLeaves>
           <ion-row class="no-leaves">
             <ion-col size="12" class="ion-text-center">
-              <ion-icon name="document-text-outline" style="font-size:48px;color:#ccc;display:block;margin:0 auto 8px;"></ion-icon>
+              <ion-icon name="document-text-outline"
+                style="font-size:48px;color:#ccc;display:block;margin:0 auto 8px;"></ion-icon>
               <p class="no-data-text">No approved or rejected leave requests</p>
             </ion-col>
           </ion-row>
@@ -302,7 +205,8 @@
                 </ion-item>
                 <ion-item>
                   <ion-label><strong>Period:</strong></ion-label>
-                  <ion-text>{{ selectedLeave?.from_date | date:'MMM d' }} - {{ selectedLeave?.to_date | date:'MMM d' }}</ion-text>
+                  <ion-text>{{ selectedLeave?.from_date | date:'MMM d' }} - {{ selectedLeave?.to_date | date:'MMM d'
+                    }}</ion-text>
                 </ion-item>
                 <ion-item>
                   <ion-label><strong>Reason:</strong></ion-label>

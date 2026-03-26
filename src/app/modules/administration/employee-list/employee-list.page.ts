@@ -43,7 +43,7 @@ export class EmployeeListPage implements OnInit {
 
   EmployeeselectedFile: File | null = null;
   isUploading = false;
-  @ViewChild(IonModal) modal!: IonModal;
+  @ViewChild('uploadModal') uploadModal!: IonModal;
 
   constructor(
     private employeeService: EmployeeService,
@@ -157,7 +157,7 @@ export class EmployeeListPage implements OnInit {
     }
 
     this.isUploading = true;
-    this.modal.dismiss();
+    this.uploadModal.dismiss();
 
     this.adminService.uploadEmployees(this.EmployeeselectedFile).subscribe({
       next: () => {

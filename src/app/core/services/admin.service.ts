@@ -204,4 +204,12 @@ export class AdminService {
   createUser(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/auth/user/create`, payload);
   }
+
+  /* ===================== LEAVE ALLOCATION & INITIALIZATION ===================== */
+  updateBulkLeaveAllocation(planId: number, payload: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/leaves/plans/${planId}`, payload);
+  }
+  initializeLeaveBalance(empId: number, payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/leaves/initialize-balance/${empId}`, payload);
+  }
 }

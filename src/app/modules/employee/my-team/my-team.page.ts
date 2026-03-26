@@ -18,12 +18,23 @@ export class MyTeamPage implements OnInit, OnDestroy {
   filteredTeam: any[] = [];
   isLoading = false;
 
-  attendanceData: any = null;
-  attendanceViewActive = false;
   attendanceStatuses: { [key: number]: any } = {};
   pollingInterval: any;
 
-  selectedDate: string = new Date().toISOString().split('T')[0];
+  searchTerm: string = '';
+  isManager = false;
+  userRole: string | null = null;
+  teamAttendanceSummary: any = null;
+
+  selectedDate: string = new Date().toISOString();
+  currentFilter: string = 'all';
+  counts = {
+    total: 0,
+    present: 0,
+    absent: 0,
+    onLeave: 0,
+    notPunched: 0
+  };
 
   constructor(
     private employeeService: EmployeeService,
@@ -33,7 +44,76 @@ export class MyTeamPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.updateRole();
     this.loadTeamMembers();
+    // No need to load summary from API if we calculate it dynamically
+  }
+
+  /* ===================== ROLE ===================== */
+  private updateRole() {
+    this.userRole = (localStorage.getItem('role') || '').toLowerCase();
+    this.isManager = this.userRole === 'manager' || this.userRole === 'hr';
+  }
+
+  calculateCounts() {
+    this.counts = {
+      total: this.teamMembers.length,
+      present: 0,
+      absent: 0,
+      onLeave: 0,
+      notPunched: 0
+    };
+
+    this.teamMembers.forEach(m => {
+      const status = (this.getRealTimeStatus(m.id).status || '').toLowerCase();
+      if (status === 'in' || status === 'present' || status.includes('in') || status === 'wfh') {
+        this.counts.present++;
+      } else if (status.includes('leave')) {
+        this.counts.onLeave++;
+      } else if (status === 'absent') {
+        this.counts.absent++;
+      } else {
+        // Not checked-in includes those with 'not_checked_in', 'out' or empty status
+        this.counts.notPunched++;
+      }
+    });
+  }
+
+  setFilter(status: string) {
+    this.currentFilter = status;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    let filtered = [...this.teamMembers];
+
+    // Status Filter
+    if (this.currentFilter !== 'all') {
+      filtered = filtered.filter(m => {
+        const stats = this.getRealTimeStatus(m.id);
+        const status = (stats.status || '').toLowerCase();
+        if (this.currentFilter === 'present') return status === 'in' || status === 'present' || status.includes('in') || status === 'wfh';
+        if (this.currentFilter === 'absent') return status === 'absent';
+        if (this.currentFilter === 'on_leave') return status.includes('leave');
+        if (this.currentFilter === 'not_punched') return status === 'not_checked_in' || status === 'out' || !status;
+        return true;
+      });
+    }
+
+    // Search Filter
+    if (this.searchTerm) {
+      const term = this.searchTerm.toLowerCase();
+      filtered = filtered.filter(member => {
+        return (
+          member.FirstName?.toLowerCase().includes(term) ||
+          member.LastName?.toLowerCase().includes(term) ||
+          member.WorkEmail?.toLowerCase().includes(term) ||
+          member.DesignationCode?.toLowerCase().includes(term)
+        );
+      });
+    }
+
+    this.filteredTeam = filtered;
   }
 
   ionViewWillEnter() {
@@ -50,6 +130,7 @@ export class MyTeamPage implements OnInit, OnDestroy {
 
   loadTeamMembers() {
     this.isLoading = true;
+    this.attendanceStatuses = {}; // Clear old statuses
     this.employeeService.getMyTeamList().subscribe({
       next: (res: any) => {
         if (res?.team) {
@@ -63,8 +144,19 @@ export class MyTeamPage implements OnInit, OnDestroy {
         this.filteredTeam = [...this.teamMembers];
         this.isLoading = false;
 
+        // Calculate counts immediately after list is loaded to show Total Team Size
+        this.calculateCounts();
+        this.applyFilters();
+
         if (this.teamMembers.length > 0) {
-          this.fetchBulkAttendanceStatus();
+          const today = new Date().toISOString().split('T')[0];
+          const selected = this.selectedDate.split('T')[0];
+          
+          if (today === selected) {
+            this.fetchBulkAttendanceStatus();
+          } else {
+            this.fetchAttendanceReportForDate(selected);
+          }
         }
       },
       error: (error: any) => {
@@ -90,19 +182,8 @@ export class MyTeamPage implements OnInit, OnDestroy {
   }
 
   filterTeam(event: any) {
-    const searchTerm = event.target.value?.toLowerCase() || '';
-    if (!searchTerm) {
-      this.filteredTeam = [...this.teamMembers];
-      return;
-    }
-    this.filteredTeam = this.teamMembers.filter(member => {
-      return (
-        member.FirstName?.toLowerCase().includes(searchTerm) ||
-        member.LastName?.toLowerCase().includes(searchTerm) ||
-        member.WorkEmail?.toLowerCase().includes(searchTerm) ||
-        member.DesignationCode?.toLowerCase().includes(searchTerm)
-      );
-    });
+    this.searchTerm = event.target.value || '';
+    this.applyFilters();
   }
 
   getInitials(firstName: string, lastName: string): string {
@@ -116,70 +197,44 @@ export class MyTeamPage implements OnInit, OnDestroy {
 
   /* ================= MODALS ================= */
 
-  async openLeaveApprovals() {
+  async navigateToLeaveApprovals() {
     const modal = await this.modalCtrl.create({
       component: ManagerLeaveApprovalsComponent,
+      cssClass: 'side-custom-popup team-popup',
+      backdropDismiss: false,
     });
-    return await modal.present();
+    await modal.present();
   }
 
-  async openTimesheetApprovals() {
+  async navigateToTimesheetApprovals() {
     const modal = await this.modalCtrl.create({
       component: ManagerTimesheetApprovalsComponent,
-      cssClass: 'sidebar-modal'
+      cssClass: 'side-custom-popup timesheet-popup',
+      backdropDismiss: false,
     });
-    return await modal.present();
+    await modal.present();
   }
 
-  async openWFHApprovals() {
+  async navigateToAttendanceApprovals() {
     const modal = await this.modalCtrl.create({
       component: ManagerWfhApprovalsComponent,
+      cssClass: 'side-custom-popup team-popup',
+      backdropDismiss: false,
     });
-    return await modal.present();
+    await modal.present();
   }
 
-  navigateToTeamReports() {
-    // Navigate if route exists
+  navigateToMyTeam() {
+    // Already on MyTeam
   }
 
-  onReportChange(event: any) {
-    if (event.detail.value === "team_report") {
-      this.navigateToTeamReports();
-      event.target.value = null;
-    }
-  }
-
-  /* ================= ATTENDANCE VIEW ================= */
-
-  toggleAttendanceView() {
-    this.attendanceViewActive = !this.attendanceViewActive;
-    if (this.attendanceViewActive) {
-      this.attendanceData = null; // Clear old data
-      this.loadTeamAttendance();
-    }
-  }
+  /* ================= DATE CHANGE ================= */
 
   onDateChange(event: any) {
-    this.selectedDate = event.detail.value.split('T')[0];
-    this.loadTeamAttendance();
+    this.selectedDate = event.detail.value;
+    this.loadTeamMembers();
   }
 
-  loadTeamAttendance() {
-    if (!this.attendanceViewActive) return;
-
-    this.isLoading = true;
-    const filterParams = { date: this.selectedDate };
-
-    // Implementation would call a Team Attendance API
-    // For now, map existing members with statuses
-    setTimeout(() => {
-      this.attendanceData = this.filteredTeam.map(member => ({
-        ...member,
-        attendance: this.attendanceStatuses[member.id] || { status: 'absent' }
-      }));
-      this.isLoading = false;
-    }, 500);
-  }
 
   /* ================= REALTIME STATUS POLLING ================= */
 
@@ -202,25 +257,80 @@ export class MyTeamPage implements OnInit, OnDestroy {
     const employeeIds = this.teamMembers.map(m => m.id);
     this.attendanceService.bulkStatusCheck(employeeIds).subscribe({
       next: (res: any) => {
-        if (res.data) {
+        const statusList = res.statuses || res.data || [];
+        if (statusList) {
           const newStatuses: any = {};
-          res.data.forEach((status: any) => {
+          statusList.forEach((status: any) => {
             newStatuses[status.employee_id] = {
-              status: status.status,
-              first_in: status.first_in,
+              // Priority: attendance_status (more descriptive like 'On Leave') > status (usually 'in'/'out')
+              status: (status.attendance_status || status.status)?.toLowerCase(),
+              first_in: status.first_in || status.last_punch_time,
               last_out: status.last_out,
-              total_hours: status.total_hours,
-              wfh_mode: status.wfh_mode
+              total_hours: status.total_hours
             };
           });
           this.attendanceStatuses = { ...this.attendanceStatuses, ...newStatuses };
+          this.calculateCounts();
+          this.applyFilters();
         }
       },
       error: (err) => console.error('Bulk status check failed', err)
     });
   }
 
+  fetchAttendanceReportForDate(date: string) {
+    this.employeeService.getTeamAttendanceReport(date).subscribe({
+      next: (res: any) => {
+        const attendanceList = res.attendance || [];
+        const leaveList = res.on_leave || [];
+        const newStatuses: any = {};
+
+        // Reset for selected date
+        this.attendanceStatuses = {};
+
+        // Merge Attendance
+        attendanceList.forEach((att: any) => {
+          newStatuses[att.employee_id] = {
+            status: att.status || 'present',
+            first_in: att.first_in,
+            last_out: att.last_out,
+            total_hours: att.total_hours
+          };
+        });
+
+        // Merge Leaves
+        leaveList.forEach((leave: any) => {
+          newStatuses[leave.employee_id] = {
+            status: 'on_leave',
+            leave_type: leave.leave_type
+          };
+        });
+
+        this.attendanceStatuses = newStatuses;
+        this.calculateCounts();
+        this.applyFilters();
+      },
+      error: (err) => console.error('Error fetching report for date:', err)
+    });
+  }
+
   getRealTimeStatus(employeeId: number): any {
-    return this.attendanceStatuses[employeeId] || { status: 'absent' };
+    return this.attendanceStatuses[employeeId] || { status: 'not_checked_in' };
+  }
+
+  getDisplayStatusText(employeeId: number): string {
+    const status = (this.getRealTimeStatus(employeeId).status || '').toLowerCase();
+    if (status === 'in' || status === 'present' || status.includes('in') || status === 'wfh') return 'IN';
+    if (status.includes('leave')) return 'On Leave';
+    if (status === 'absent') return 'Absent';
+    return 'Out';
+  }
+
+  getDisplayStatusClass(employeeId: number): string {
+    const status = (this.getRealTimeStatus(employeeId).status || '').toLowerCase();
+    if (status === 'in' || status === 'present' || status.includes('in') || status === 'wfh') return 'present';
+    if (status.includes('leave')) return 'leave-status';
+    if (status === 'absent') return 'absent';
+    return 'not-punched-status';
   }
 }

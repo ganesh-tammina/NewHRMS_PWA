@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { AdminService } from 'src/app/core/services/admin.service';
-import { LeaveTypeService } from 'src/app/core/services/leavetype.service';
+import { AdminService } from '../../../core/services/admin.service';
+import { LeaveTypeService } from '../../../core/services/leavetype.service';
+import { LeaveAllocationModal } from './modals/leave-allocation-modal.component';
+import { LeaveInitializeModal } from './modals/leave-initialize-modal.component';
 
 @Component({
   selector: 'app-leaves-admin',
   templateUrl: './leaves-admin.page.html',
   styleUrls: ['./leaves-admin.page.scss'],
-  standalone: false,
+  standalone: false
 })
 export class LeavesAdminPage implements OnInit {
   totalLeaveTypes: number = 0;
@@ -52,11 +54,17 @@ export class LeavesAdminPage implements OnInit {
   }
 
   async openAllocationModal() {
-    this.showToast('Leave Allocation feature coming soon in this migration phase');
+    const modal = await this.modalCtrl.create({
+      component: LeaveAllocationModal
+    });
+    return await modal.present();
   }
 
   async openInitializeModal() {
-    this.showToast('Leave Initialization feature coming soon in this migration phase');
+    const modal = await this.modalCtrl.create({
+      component: LeaveInitializeModal
+    });
+    return await modal.present();
   }
 
   async showToast(message: string) {

@@ -1,0 +1,130 @@
+.custom-app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 64px;
+  width: 100%;
+  z-index: 1000;
+
+  .header-toolbar {
+    --background: #1e293b;
+    /* Matches legacy secondary-shade roughly, standard dark blue/gray */
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.brand-logo {
+  height: 75px;
+  vertical-align: middle;
+  padding: 10px 10px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+
+  .custom-searchbar {
+    --background: #ffffff;
+    --color: #0f172a;
+    --placeholder-color: #64748b;
+    --icon-color: #64748b;
+    --border-radius: 20px;
+    --box-shadow: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 40px;
+    margin: 0;
+
+    ::ng-deep .searchbar-input-container {
+      height: 40px;
+    }
+
+    ::ng-deep .searchbar-input {
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.search-popover {
+  --width: 400px;
+  --max-height: 300px;
+  margin-top: 5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-greeting {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .user-greeting {
+    display: block;
+  }
+
+  .user-name {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+}
+
+.nav-icon-btn {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  margin: 0;
+  height: 40px;
+
+  .nav-icon {
+    font-size: 1.4rem;
+    color: #ffffff;
+  }
+}
+
+.profile-btn {
+  --padding-start: 0;
+  --padding-end: 0;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 8px;
+
+  .profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.profile-dropdown {
+  --width: 220px;
+  --border-radius: 12px;
+  --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  ion-item {
+    --min-height: 48px;
+    font-size: 0.95rem;
+
+    ion-icon {
+      font-size: 1.2rem;
+      margin-right: 12px;
+    }
+  }
+}

@@ -58,7 +58,7 @@ export class EmployeeService {
   }
 
   uploadProfileImage(file: File): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
     const formData = new FormData();
     formData.append('image', file);
     const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
@@ -109,7 +109,7 @@ export class EmployeeService {
   }
 
   getReportingEmployees(employeeId: number): Observable<any[]> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
     return this.http.get<any[]>(`${this.reportingEndpoint}/${employeeId}`, { headers: { Authorization: `Bearer ${token}` } });
   }
 
@@ -148,7 +148,7 @@ export class EmployeeService {
   }
 
   getTeamAttendanceReport(date?: string): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || localStorage.getItem('access_token');
     let params = new HttpParams();
     if (date) params = params.set('date', date);
     return this.http.get<any>(`${this.ATTENDANCE_API_URL}/report/team`, { params, headers: { Authorization: `Bearer ${token}` } });
