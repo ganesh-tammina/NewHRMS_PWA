@@ -1,0 +1,146 @@
+.row-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filter-block {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-secondry {
+  padding: 6px 14px;
+  background: #fff;
+  border: 1px solid #DEDEDE;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.active {
+    background: #3498DB;
+    color: #fff;
+    border-color: #3498DB;
+  }
+
+  &:hover:not(.active) {
+    background: #f1f5f9;
+  }
+}
+
+.outline-btns {
+  display: flex;
+  gap: 4px;
+}
+
+.attendance-table {
+  margin-top: 16px;
+
+  .table-header {
+    background: #f1f5f9;
+    font-weight: 600;
+    font-size: 13px;
+    color: #475569;
+    border-radius: 8px 8px 0 0;
+
+    ion-col {
+      padding: 10px 8px;
+    }
+  }
+
+  .table-row {
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+    color: #334155;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    ion-col {
+      padding: 10px 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    &.weekoff-row {
+      background: #fafafa;
+      color: #999;
+    }
+
+    &.leave-row {
+      background: #f5f0ff;
+    }
+  }
+}
+
+.badge-leave {
+  background: #b39ddb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.badge-woff {
+  background: #d7ccc8;
+  color: #795548;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.no-log {
+  display: flex;
+  align-items: center;
+}
+
+.clockin-out {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+
+  h4 {
+    margin: 4px 0 0 0;
+    font-weight: 600;
+    font-size: 14px;
+    color: #334155;
+  }
+}
+
+.clockin-img,
+.clockout-img {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ion-modal.side-custom-popup {
+  --height: 70%;
+  --border-radius: 16px;
+}
+
+.card-title {
+  font-size: 13px;
+  color: #64748B;
+  margin: 4px 0;
+}

@@ -1,0 +1,10 @@
+@use '../create-offer-header/create-offer-header.component.scss' as *;
+@use '../../../theme/variables.scss' as *;
+
+ion-content::part[scroll] {
+  @include scroll-style();
+}
+
+ion-header {
+  box-shadow: none;
+}

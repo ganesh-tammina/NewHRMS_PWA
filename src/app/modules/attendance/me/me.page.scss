@@ -1,0 +1,260 @@
+.dashboard {
+  background-color: #E6F1FF;
+  padding: 20px;
+  gap: 20px;
+
+  .attendance-block {
+    ion-card {
+      border-radius: 12px;
+      box-shadow: 0 3px 8px #00000036;
+      height: 250px;
+      padding: 8px;
+
+      ion-card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #334155;
+        text-align: left;
+      }
+    }
+  }
+
+  .days-grid {
+    padding: 10px;
+  }
+
+  .day-container {
+    position: relative;
+
+    &::before {
+      content: "";
+      transition: background-color 0.3s ease;
+      width: 40px;
+      position: absolute;
+      background: linear-gradient(180deg, #3498DB 0%, #7FCAFD 100%);
+      top: -8px;
+      height: 12px;
+      left: 5px;
+      border-radius: 12px;
+    }
+
+    .day-of-week {
+      font-weight: bold;
+      font-size: 1em;
+      margin: 0;
+      text-overflow: initial;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 4px;
+    }
+  }
+
+  .highlight-today {
+    &::before {
+      background: linear-gradient(180deg, #FF4B4B 0%, #FFCCCC 100%);
+    }
+  }
+
+  .highlight-weekoff {
+    font-weight: 600;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -6px;
+    margin-left: 6px;
+
+    &::before {
+      background: linear-gradient(180deg, #D4D4D4 0%, #EFEFEF 100%);
+    }
+  }
+}
+
+ion-progress-bar {
+  height: 6px;
+  border-radius: 6px;
+  --background: #E4E4E4 !important;
+  --progress-background: #3498db !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.attendance-status {
+  .today-status {
+    font-size: 14px;
+    font-weight: 500;
+
+    ion-badge {
+      text-transform: capitalize;
+      color: #fff;
+      position: relative;
+      top: 5px;
+    }
+  }
+
+  .monthly-stats {
+    background: #f8fbff;
+    padding: 10px;
+    border-radius: 8px;
+
+    .stat-label {
+      font-size: 11px;
+      color: #777;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 16px;
+      margin: 0;
+
+      &.text-success {
+        color: #2ecc71;
+      }
+
+      &.text-danger {
+        color: #e74c3c;
+      }
+
+      &.text-warning {
+        color: #f1c40f;
+      }
+
+      &.text-info {
+        color: #3498DB;
+      }
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background: #e1e9f5;
+    width: 100%;
+  }
+
+  .divider-dashed {
+    height: 1px;
+    border-top: 1px dashed #cedae9;
+    width: 100%;
+  }
+}
+
+.dashboard .attendance-block ion-card.attendance-status {
+  height: auto;
+  min-height: 250px;
+}
+
+/* Actions */
+.actions {
+  text-align: center;
+
+  .actions-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .clear {
+      min-height: auto;
+      font-size: 12px;
+      --padding-top: 4px;
+      --padding-bottom: 4px;
+      --padding-start: 0;
+      --padding-end: 0;
+      display: block;
+      text-align: left;
+      text-transform: capitalize;
+      justify-self: flex-start;
+
+      &:hover {
+        --background: transparent;
+      }
+    }
+  }
+}
+
+/* Custom tabs */
+.custom-tabs {
+  width: fit-content;
+
+  button {
+    &:first-child {
+      border-bottom-left-radius: 8px;
+      border-top-left-radius: 8px;
+    }
+
+    &:last-child {
+      border-bottom-right-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    padding: 12px 24px;
+    background: #fff;
+    border: 0.5px solid #DEDEDE;
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+
+    &.active {
+      background: #3498DB;
+      color: #fff;
+    }
+  }
+}
+
+.attendance-log-card {
+  background-color: #E6F1FF;
+  padding: 20px;
+  gap: 20px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 12px;
+  }
+}
+
+/* Utility */
+.row-left {
+  display: flex;
+  align-items: center;
+}
+
+.row-space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mr-8 {
+  margin-right: 8px;
+}
+
+.pl-5 {
+  padding-left: 5px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+ion-modal {
+  --height: 70%;
+  --border-radius: 16px;
+}
