@@ -1,0 +1,7 @@
+{
+  "name": "NewHRMS_PWA",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
