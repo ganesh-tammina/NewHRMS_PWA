@@ -4,7 +4,8 @@
   <div class="login-page-container">
     <div class="brand-section">
       <div class="brand-content animate__animated animate__fadeInLeft">
-        <img src="assets/TT-logo-white.png" alt="Company Logo" class="brand-logo" />
+        <img src="https://techtammina.com/wp-content/uploads/2025/05/techlogo.png" alt="Company Logo"
+          class="brand-logo" />
         <h1 class="brand-title">Master HRMS</h1>
         <p class="brand-subtitle">Experience the future of HR Management.</p>
       </div>
@@ -27,12 +28,8 @@
                 <ion-item class="custom-input-item">
                   <ion-icon name="person-outline" slot="start"></ion-icon>
                   <ion-label position="floating">Username / Employee ID</ion-label>
-                  <ion-input 
-                    type="text" 
-                    formControlName="email" 
-                    [readonly]="emailChecked" 
-                    (keydown)="onKeyPress($event)"
-                    placeholder="Enter username or ID">
+                  <ion-input type="text" formControlName="email" [readonly]="emailChecked"
+                    (keydown)="onKeyPress($event)" placeholder="Enter username or ID">
                   </ion-input>
                 </ion-item>
 
@@ -52,32 +49,17 @@
               </ion-list>
 
               <div class="form-actions ion-padding-top">
-                <ion-button 
-                  expand="block" 
-                  class="login-button" 
-                  type="button" 
-                  *ngIf="!emailChecked" 
-                  (click)="onNext()"
+                <ion-button expand="block" class="login-button" type="button" *ngIf="!emailChecked" (click)="onNext()"
                   [disabled]="loginForm.get('email')?.invalid">
                   Next
                   <ion-icon slot="end" name="arrow-forward"></ion-icon>
                 </ion-button>
 
-                <ion-button 
-                  expand="block" 
-                  class="login-button" 
-                  type="submit" 
-                  *ngIf="showPassword" 
-                  [disabled]="loading">
+                <ion-button expand="block" class="login-button" type="submit" *ngIf="showPassword" [disabled]="loading">
                   Login
                 </ion-button>
 
-                <ion-button 
-                  expand="block" 
-                  fill="outline" 
-                  class="create-button" 
-                  type="submit" 
-                  *ngIf="showCreatePassword" 
+                <ion-button expand="block" fill="outline" class="create-button" type="submit" *ngIf="showCreatePassword"
                   [disabled]="loading">
                   Create & Login
                 </ion-button>

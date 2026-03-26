@@ -1,9 +1,9 @@
 <ion-header class="ion-no-border">
   <ion-toolbar class="gradient-header">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Attendance Reports</ion-title>
+    <div class="section-actions">
+      <ion-searchbar (ionInput)="filterTeam($event)" [(ngModel)]="searchTerm" placeholder="Search employee..."
+        animated="true" class="custom-searchbar"></ion-searchbar>
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -14,19 +14,49 @@
   </ion-refresher>
 
   <div class="reports-container">
+    <!-- ═══════════ MANAGER APPROVAL BAR ═══════════ -->
+    <div class="manager-approval-bar" *ngIf="isManager">
+      <div class="approval-pills-container">
+        <button class="approval-pill" (click)="navigateToTimesheetApprovals()">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Timesheet Approval</span>
+        </button>
+        <button class="approval-pill" (click)="navigateToLeaveApprovals()">
+          <ion-icon name="airplane-outline"></ion-icon>
+          <span>Leaves Approval</span>
+        </button>
+        <button class="approval-pill" (click)="navigateToAttendanceApprovals()">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <span>Attendance Approval</span>
+        </button>
+        <button class="approval-pill active" (click)="navigateToMyTeam()">
+          <ion-icon name="people-outline"></ion-icon>
+          <span>My Team</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ═══════════ ATTENDANCE REPORTS HEADER ═══════════ -->
     <div class="reports-header-card">
       <div class="header-main">
-        <h2>Attendance Reports</h2>
+        <div class="header-title-block">
+          <h2>Attendance Reports</h2>
+          <p class="current-date-label">Showing results for: <strong>{{ selectedDate | date:'fullDate' }}</strong></p>
+        </div>
         <div class="date-selector">
-          <span class="label">Select Date</span>
+          <ion-button fill="clear" color="primary" class="reset-btn" (click)="resetToToday()"
+            *ngIf="!isTodaySelected()">
+            <ion-icon name="today-outline" slot="start"></ion-icon>
+            Back to Today
+          </ion-button>
           <div class="date-picker-wrapper">
-             <ion-datetime-button datetime="datetime"></ion-datetime-button>
-             <ion-modal>
-               <ng-template>
-                 <ion-datetime id="datetime" presentation="date" [(ngModel)]="selectedDate" (ionChange)="onDateChange($event)"></ion-datetime>
-               </ng-template>
-             </ion-modal>
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="datetime" presentation="date" [(ngModel)]="selectedDate"
+                  (ionChange)="onDateChange($event)"></ion-datetime>
+              </ng-template>
+            </ion-modal>
           </div>
         </div>
       </div>
@@ -84,30 +114,29 @@
         </div>
 
         <!-- Not Punched (Not Checked-In) -->
-        <div class="premium-card not-punched" (click)="setFilter('not_punched')" [class.active]="currentFilter === 'not_punched'">
-           <div class="card-content">
-             <div class="card-icon"><ion-icon name="hand-right"></ion-icon></div>
-             <div class="card-info">
-               <span class="label">Not Punched</span>
-               <span class="value">{{ counts.notPunched || 0 }}</span>
-             </div>
-           </div>
-           <div class="card-illustration"><ion-icon name="hand-right-outline"></ion-icon></div>
+        <div class="premium-card not-punched" (click)="setFilter('not_punched')"
+          [class.active]="currentFilter === 'not_punched'">
+          <div class="card-content">
+            <div class="card-icon"><ion-icon name="hand-right"></ion-icon></div>
+            <div class="card-info">
+              <span class="label">Not Punched</span>
+              <span class="value">{{ counts.notPunched || 0 }}</span>
+            </div>
+          </div>
+          <div class="card-illustration"><ion-icon name="hand-right-outline"></ion-icon></div>
         </div>
       </div>
     </div>
 
     <!-- ═══════════ TEAM LIST GRID ═══════════ -->
     <div class="team-section">
-      <div class="section-actions">
-        <ion-searchbar (ionInput)="filterTeam($event)" [(ngModel)]="searchTerm" placeholder="Search employee..." animated="true" class="custom-searchbar"></ion-searchbar>
-      </div>
+
 
       <div class="premium-team-grid" *ngIf="!isLoading; else loadingState">
         <div class="employee-card-wrapper" *ngFor="let member of filteredTeam">
           <div class="premium-emp-card">
             <div class="card-accent" [style.background]="getAvatarColor(member.id)"></div>
-            
+
             <div class="card-body">
               <div class="body-top">
                 <div class="profile-block">
@@ -120,7 +149,7 @@
                     <p class="emp-dept" *ngIf="member.ProcessName">{{ member.ProcessName }}</p>
                   </div>
                 </div>
-                
+
                 <!-- Status Badge -->
                 <div class="status-badge-container">
                   <div class="status-badge" [ngClass]="getDisplayStatusClass(member.id)">

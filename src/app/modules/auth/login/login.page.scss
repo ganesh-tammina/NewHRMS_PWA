@@ -9,9 +9,12 @@
 
 .login-bg-overlay {
   position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: radial-gradient(circle at 10% 20%, rgba(31, 116, 187, 0.2) 0%, rgba(0, 0, 0, 0) 40%),
-              radial-gradient(circle at 90% 80%, rgba(52, 152, 219, 0.2) 0%, rgba(0, 0, 0, 0) 40%);
+    radial-gradient(circle at 90% 80%, rgba(52, 152, 219, 0.2) 0%, rgba(0, 0, 0, 0) 40%);
   z-index: 0;
 }
 
@@ -36,7 +39,7 @@
   color: white;
 
   .brand-logo {
-    width: 120px;
+    width: 250px;
     height: auto;
     margin-bottom: 20px;
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
@@ -171,7 +174,7 @@
       --color: rgba(255, 255, 255, 0.5);
       text-transform: none;
       font-size: 13px;
-      
+
       &:hover {
         --color: #fff;
       }
@@ -196,11 +199,11 @@
     .brand-title {
       font-size: 32px;
     }
-    
+
     .brand-subtitle {
       font-size: 16px;
     }
-    
+
     .brand-logo {
       width: 80px;
     }
@@ -214,7 +217,7 @@
 
   .login-glass-card {
     min-height: auto;
-    
+
     .card-faces {
       padding: 30px 20px;
     }
@@ -223,13 +226,14 @@
 
 @media (max-width: 480px) {
   .brand-section {
-    display: none; /* Hide brand on very small screens to fit form */
+    display: none;
+    /* Hide brand on very small screens to fit form */
   }
-  
+
   .login-content {
     background: linear-gradient(180deg, #0a1d2c 0%, #17374d 100%);
   }
-  
+
   .login-glass-card {
     background: transparent;
     backdrop-filter: none;
@@ -246,14 +250,33 @@
 }
 
 @keyframes fadeInLeft {
-  from { opacity: 0; transform: translateX(-30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(30px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.animate__fadeInLeft { animation-name: fadeInLeft; }
-.animate__fadeInRight { animation-name: fadeInRight; }
+.animate__fadeInLeft {
+  animation-name: fadeInLeft;
+}
+
+.animate__fadeInRight {
+  animation-name: fadeInRight;
+}

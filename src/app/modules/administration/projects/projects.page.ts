@@ -160,6 +160,12 @@ export class ProjectsPage implements OnInit {
     this.filteredManagers = [];
   }
 
+  navigateToDetails(project: Project) {
+    if (project.id) {
+      this.router.navigate(['/administration/projects/details', project.id]);
+    }
+  }
+
   private formatDate(date: any): string {
     if (!date) return '';
     return new Date(date).toISOString().split('T')[0];

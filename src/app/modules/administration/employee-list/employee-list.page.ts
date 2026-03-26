@@ -35,6 +35,8 @@ export class EmployeeListPage implements OnInit {
   managerSearchTerm: string = '';
   managerDropdownOpen: boolean = false;
 
+  allLoadedEmployees: any[] = [];
+  filteredEmployees: any[] = [];
   pagedCandidates: any[] = [];
   pageSize = 20;
   currentPage = 1;
@@ -94,21 +96,40 @@ export class EmployeeListPage implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getAllEmployees(this.currentPage, this.pageSize, this.searchTerm).subscribe((res: any) => {
-      this.allEmployees = res.data || [];
+    // Fetch a large number of employees to support local filtering like app-roles
+    this.employeeService.getAllEmployees(1, 2000, '').subscribe((res: any) => {
+      this.allLoadedEmployees = res.data || [];
+      this.allEmployees = [...this.allLoadedEmployees];
       this.filteredManagers = [...this.allEmployees];
-      this.pagedCandidates = [...this.allEmployees];
-      if (res.pagination) {
-        this.currentPage = res.pagination.page;
-        this.totalPages = res.pagination.pages;
-        this.totalEmployees = res.pagination.total;
-      }
+      this.applySearch();
     });
   }
 
   applySearch() {
     this.currentPage = 1;
-    this.loadEmployees();
+    const term = (this.searchTerm || '').toLowerCase().trim();
+    
+    if (term) {
+      this.filteredEmployees = this.allLoadedEmployees.filter(emp => {
+        return (emp.FullName || '').toLowerCase().includes(term) ||
+               (emp.WorkEmail || '').toLowerCase().includes(term) ||
+               (emp.EmployeeNumber || '').toString().toLowerCase().includes(term) ||
+               (emp.department_name || '').toLowerCase().includes(term) ||
+               (emp.designation_name || '').toLowerCase().includes(term) ||
+               (emp.id || '').toString().includes(term);
+      });
+    } else {
+      this.filteredEmployees = [...this.allLoadedEmployees];
+    }
+    
+    this.totalEmployees = this.filteredEmployees.length;
+    this.totalPages = Math.ceil(this.totalEmployees / this.pageSize) || 1;
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.pagedCandidates = this.filteredEmployees.slice(startIndex, startIndex + this.pageSize);
   }
 
   selectEmployee(emp: any) {
@@ -176,14 +197,14 @@ export class EmployeeListPage implements OnInit {
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.loadEmployees();
+      this.updatePagination();
     }
   }
 
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.loadEmployees();
+      this.updatePagination();
     }
   }
 

@@ -27,9 +27,7 @@ import { WorkFromHomeComponent } from './components/work-from-home.component';
     ClockButtonComponent,
     AttendanceLogComponent,
     CalendarComponent,
-    AttendanceRequestComponent,
-    RemoteClockinModalComponent,
-    WorkFromHomeComponent
+    AttendanceRequestComponent
   ],
 })
 export class MePage implements OnInit {

@@ -225,14 +225,28 @@ export class MyTeamPage implements OnInit, OnDestroy {
   }
 
   navigateToMyTeam() {
-    // Already on MyTeam
+    this.currentFilter = 'all';
+    this.resetToToday();
   }
 
   /* ================= DATE CHANGE ================= */
 
   onDateChange(event: any) {
-    this.selectedDate = event.detail.value;
+    if (event.detail.value) {
+      this.selectedDate = event.detail.value;
+      this.loadTeamMembers();
+    }
+  }
+
+  resetToToday() {
+    this.selectedDate = new Date().toISOString();
     this.loadTeamMembers();
+  }
+
+  isTodaySelected(): boolean {
+    const today = new Date().toISOString().split('T')[0];
+    const selected = this.selectedDate.split('T')[0];
+    return today === selected;
   }
 
 

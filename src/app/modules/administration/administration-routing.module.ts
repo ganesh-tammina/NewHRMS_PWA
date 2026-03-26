@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'projects',
     loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsPageModule)
+  },
+  {
+    path: 'projects/details/:id',
+    loadComponent: () => import('./projects/project-details/project-details.page').then(m => m.ProjectDetailsPage)
   }
 ];
 

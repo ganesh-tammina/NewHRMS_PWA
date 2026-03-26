@@ -112,7 +112,9 @@
       <ion-grid *ngIf="!loadingProjects">
         <ion-row *ngFor="let proj of projects" class="table-list-row">
           <ion-col size="2">{{proj.project_code}}</ion-col>
-          <ion-col size="4" class="proj-name-cell">{{proj.project_name}}</ion-col>
+          <ion-col size="4" class="proj-name-cell clickable-name" (click)="navigateToDetails(proj)">
+            {{proj.project_name}}
+          </ion-col>
           <ion-col size="3">{{proj.client_name}}</ion-col>
           <ion-col size="2">
             <ion-badge [color]="proj.status === 'active' ? 'success' : proj.status === 'on_hold' ? 'warning' : proj.status === 'completed' ? 'primary' : 'danger'">
